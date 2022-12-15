@@ -17,6 +17,10 @@ const PropertyList = () => {
     const [currentAccountBalance, setAccountBalance] = useState();
     const [datarowsloading,setdatarowsloading] = useState(false);
     const [datarows, setdatarows] = useState([])
+    const [propertyaddress,setPropertyAddress] = useState();
+    const [costineth,setCostInEth] = useState();
+    const[imgurl, setImgUrl] = useState();
+
   
 
   const loadWeb3 = async() => {
@@ -50,7 +54,13 @@ const PropertyList = () => {
   }
 
   const addProperty = async() => {
-
+    var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    _comfreeInstance.methods.addPropertyForSale(currentAccount, "0x95953992c361e1B2Fe3fCAAeb97Bb600365b9b15", imgurl, propertyaddress, costineth).send({from: currentAccount})
+    .then( results => {
+        console.log(JSON.stringify(results))
+        /*console.log(`add article ${JSON.parse(results.returnValues._id)} ${JSON.parse(results.returnValues._name)}`)*/
+    })
   }
 
   useEffect(() => {
@@ -109,7 +119,14 @@ const PropertyList = () => {
                 className="mb-3"
             >
                 <Tab eventKey="AddProperty" title="Add Property to Sell">
-
+                    <Form.Group className='mb-3' id="property">
+                        <Form.Control placeholder='Property Address' onChange={(e) => {setPropertyAddress(e.target.value)}}/>
+                        <Form.Control placeholder='Cost in ETH' onChange={(e) => {setCostInEth(e.target.value)}}/>
+                        <Form.Control placeholder='Link to Property Image' onChange={(e) => {setImgUrl(e.target.value)}}/>
+                    </Form.Group>
+                    <div>
+                    <Button variant="secondary" onClick={(e) => addProperty(e)}>Add</Button>
+                    </div>
                 </Tab>
                 <Tab eventKey="CreateOffer" title="MakeOffer">
 
