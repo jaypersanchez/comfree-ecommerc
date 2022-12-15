@@ -102,7 +102,7 @@ const PropertyList = () => {
                     {
                         datarows.map((item) => (
                             <ImageListItem key={item.id}>
-                                <img src={item.imgurl} />
+                                <img src={item.imgurl} onClick={(e) => console.log(`seller address ${item.seller}`)} />
                                 <ImageListItemBar
                                     title={item.propertyaddress}
                                     subtitle={`Price in ETH ${item.ethprice}`}
