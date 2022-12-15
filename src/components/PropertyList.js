@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import { ImageListItemBar } from '@mui/material';
+import { Alert, ImageListItemBar } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { itemData } from './common'
@@ -23,7 +23,15 @@ const PropertyList = () => {
     const [costineth,setCostInEth] = useState();
     const [imgurl, setImgUrl] = useState();
     const [selleraddress, setSellerAddress] = useState();
-
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    /** Offer Properties */
+    const [propertyid, setPropertyId] = useState();
+    //buyer address is in currentAccount
+    //use current selleraddress already defined
+    const [offeramount, setOfferAmount] = useState();
+    const [offeraccepted, setOfferAccepted] = useState(false);
   
 
   const loadWeb3 = async() => {
@@ -62,8 +70,15 @@ const PropertyList = () => {
     _comfreeInstance.methods.addPropertyForSale('0x0000000000000000000000000000000000000000', currentAccount, imgurl, propertyaddress, costineth).send({from: currentAccount})
     .then( results => {
         console.log(JSON.stringify(results))
+        setImgUrl("");
+        setPropertyAddress("");
+        setCostInEth("");
         /*console.log(`add article ${JSON.parse(results.returnValues._id)} ${JSON.parse(results.returnValues._name)}`)*/
     })
+  }
+
+  const submitOffer = async() => {
+
   }
 
   useEffect(() => {
@@ -96,14 +111,26 @@ const PropertyList = () => {
     return(
         <>
             <div>
-                List of Properties for Sale
+                Properties for Sale - Click Anywhere on the image to make an offer
             </div>
             <div>
                 <ImageList rowHeight={160} cols={3}>
                     {
                         datarows.map((item) => (
                             <ImageListItem key={item.id}>
-                                <img src={item.imgurl} onClick={(e) => console.log(`seller address ${item.seller}`)} />
+                                <img src={item.imgurl} 
+                                    onClick={
+                                        (e) => { 
+                                            console.log(`seller address ${item.seller}`)
+                                            if(item.seller === currentAccount) {
+                                                console.log(`buyser same as seller`)
+                                                window.alert(`You are the seller for this house`)
+                                            }
+                                            else {
+                                                setShow(true);
+                                            }
+                                        }
+                                    } />
                                 <ImageListItemBar
                                     title={item.propertyaddress}
                                     subtitle={`Price in ETH ${item.ethprice}`}
@@ -115,13 +142,25 @@ const PropertyList = () => {
                                           <InfoIcon onClick={() => {navigator.clipboard.writeText(item.seller)}}/>
                                         </IconButton>
                                       }
-                                >
-
-                                </ImageListItemBar>
+                                />
                             </ImageListItem>
                         ))
                     }
                 </ImageList>
+                    <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Make an Offer</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Group className='mb-3' id="balance">
+                                <Form.Control placeholder='Enter Amount of ETH to purchase' onChange={(e) => {setOfferAmount(e.target.value)}}/>
+                            </Form.Group>
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="secondary" onClick={(e) => submitOffer(e)}>Submit Offer</Button>
+                                <Button variant="secondary" onClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                    </Modal>
             </div>
             <div>
             <Tabs
