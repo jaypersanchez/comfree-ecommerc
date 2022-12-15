@@ -21,7 +21,8 @@ const PropertyList = () => {
     const [datarows, setdatarows] = useState([])
     const [propertyaddress,setPropertyAddress] = useState();
     const [costineth,setCostInEth] = useState();
-    const[imgurl, setImgUrl] = useState();
+    const [imgurl, setImgUrl] = useState();
+    const [selleraddress, setSellerAddress] = useState();
 
   
 
@@ -58,7 +59,7 @@ const PropertyList = () => {
   const addProperty = async() => {
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
-    _comfreeInstance.methods.addPropertyForSale(currentAccount, "0x95953992c361e1B2Fe3fCAAeb97Bb600365b9b15", imgurl, propertyaddress, costineth).send({from: currentAccount})
+    _comfreeInstance.methods.addPropertyForSale('0x0000000000000000000000000000000000000000', currentAccount, imgurl, propertyaddress, costineth).send({from: currentAccount})
     .then( results => {
         console.log(JSON.stringify(results))
         /*console.log(`add article ${JSON.parse(results.returnValues._id)} ${JSON.parse(results.returnValues._name)}`)*/
