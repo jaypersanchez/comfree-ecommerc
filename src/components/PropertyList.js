@@ -27,7 +27,7 @@ const PropertyList = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     /** Offer Properties */
-    const [propertyid, setPropertyId] = useState();
+    const [offerpropertyid, setOfferPropertyId] = useState();
     //buyer address is in currentAccount
     //use current selleraddress already defined
     const [offeramount, setOfferAmount] = useState();
@@ -78,6 +78,15 @@ const PropertyList = () => {
   }
 
   const submitOffer = async() => {
+    console.log(`Offer Info ${selleraddress} ${currentAccount} ${offerpropertyid} ${offeramount} ${offeraccepted}`)
+    var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    _comfreeInstance.methods.createOfferContract(offerpropertyid, currentAccount, selleraddress,  offeramount, offeraccepted).send({from: currentAccount})
+    .then(results => {
+        console.log(JSON.stringify(results))
+        
+    })
+    .then(setShow(false))
 
   }
 
@@ -127,6 +136,8 @@ const PropertyList = () => {
                                                 window.alert(`You are the seller for this house`)
                                             }
                                             else {
+                                                setOfferPropertyId(item.id);
+                                                setSellerAddress(item.seller)
                                                 setShow(true);
                                             }
                                         }
@@ -153,7 +164,9 @@ const PropertyList = () => {
                             </Modal.Header>
                             <Modal.Body>
                             <Form.Group className='mb-3' id="balance">
-                                <Form.Control placeholder='Enter Amount of ETH to purchase' onChange={(e) => {setOfferAmount(e.target.value)}}/>
+                                <Form.Control placeholder='Enter Amount of ETH to purchase' onChange={
+                                    (e) => {setOfferAmount(e.target.value)}
+                                }/>
                             </Form.Group>
                             </Modal.Body>
                             <Modal.Footer>
