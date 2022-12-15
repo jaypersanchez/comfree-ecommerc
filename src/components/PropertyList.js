@@ -5,6 +5,8 @@ import '../App.css';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { ImageListItemBar } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import { itemData } from './common'
 import Web3 from 'web3';
 import ComfreeABI from '../abi/ComfreeProtocol.json'
@@ -100,10 +102,18 @@ const PropertyList = () => {
                     {
                         datarows.map((item) => (
                             <ImageListItem key={item.id}>
-                                <img src={item.imgurl} onClick={console.log(`clicked img ${item.id}`)}/>
+                                <img src={item.imgurl} />
                                 <ImageListItemBar
                                     title={item.propertyaddress}
                                     subtitle={`Price in ETH ${item.ethprice}`}
+                                    actionIcon={
+                                        <IconButton
+                                          sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                          aria-label={`info about ${item.seller}`}
+                                        >
+                                          <InfoIcon onClick={() => {navigator.clipboard.writeText(item.seller)}}/>
+                                        </IconButton>
+                                      }
                                 >
 
                                 </ImageListItemBar>
