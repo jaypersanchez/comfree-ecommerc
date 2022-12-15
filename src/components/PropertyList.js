@@ -188,10 +188,10 @@ const PropertyList = () => {
                         <Form.Control placeholder='Link to Property Image' onChange={(e) => {setImgUrl(e.target.value)}}/>
                     </Form.Group>
                     <div>
-                    <Button variant="secondary" onClick={(e) => addProperty(e)}>Add</Button>
+                    <Button variant="secondary" onClick={(e) => addProperty(e)}>List Property</Button>
                     </div>
                 </Tab>
-                <Tab eventKey="CreateOffer" title="MakeOffer">
+                <Tab eventKey="CreateOffer" title="Manage Offer Purchase - Escrow">
 
                 </Tab>
             </Tabs>

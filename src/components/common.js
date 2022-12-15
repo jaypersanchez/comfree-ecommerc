@@ -64,6 +64,12 @@ import Web3 from 'web3';
           title: 'Bike',
           author: '@southside_customs',
         },
+        {
+          img: 'https://images.adsttc.com/media/images/596e/dc16/b22e/3854/ce00/0070/slideshow/04.jpg?1500437517'
+        },
+        {
+          img: "https://media.gettyimages.com/id/521293550/photo/india-gujarat-kutch-hodka-village.jpg?s=612x612&w=0&k=20&c=3WCGphWqRLfOJc_U7uNLcj8HU_DD_xwPWbQrNtTKB3c="
+        }
       ];
 
 
