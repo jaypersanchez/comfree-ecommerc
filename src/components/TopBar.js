@@ -1,16 +1,14 @@
-import React, {useEffect, useState, useMemo, useContext, createContext} from 'react';
+import React, {useEffect, useState, useMemo, createContext} from 'react';
 import { Button, Tabs, Tab, Container, Nav, Navbar, Form, Modal, ModalDialog } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Web3 from 'web3';
-import './App.css';
-import TopBar from './components/TopBar'
-import PropertyList from './components/PropertyList';
+import '../App.css';
 
-function App() {
+const TopBar = ({wallet}) => {
 
-  const WalletContext = createContext();
   const [currentAccount, setAccount] = useState();
   const [currentAccountBalance, setAccountBalance] = useState();
+  
 
   const loadWeb3 = async() => {
     if(window.ethereum) {
@@ -42,18 +40,19 @@ function App() {
     loadWalletData();
   })
 
-  return (
-    <div className="App">
-      <WalletContext.Provider value={[{currentAccount}, {currentAccountBalance}]}>
-        <header className="App-header">
-            <TopBar wallet={[{currentAccount}, {currentAccountBalance}]} />
-        </header>
-        <div>
-          <PropertyList />  
-        </div>  
-      </WalletContext.Provider>
-    </div>
-  );
+    return (
+      <>
+        <div className="App.header">
+        <Navbar bg="light" expand="lg">
+          <Container>
+            <Navbar.Brand>Wallet Address: {currentAccount}</Navbar.Brand>
+            <Navbar.Brand>Wallet ETH Balance: {currentAccountBalance}</Navbar.Brand>
+          </Container>
+        </Navbar>
+        </div>
+        
+      </>
+    )
 }
 
-export default App;
+export default TopBar;
