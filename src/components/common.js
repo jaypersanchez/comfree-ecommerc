@@ -69,6 +69,12 @@ import Web3 from 'web3';
         },
         {
           img: "https://media.gettyimages.com/id/521293550/photo/india-gujarat-kutch-hodka-village.jpg?s=612x612&w=0&k=20&c=3WCGphWqRLfOJc_U7uNLcj8HU_DD_xwPWbQrNtTKB3c="
+        },
+        {
+          img: "https://2.bp.blogspot.com/-7fDorXHTy5g/Vnf88kKF4II/AAAAAAAA06Y/PKa5ri8YB5A/s1600/neat-simple-home-design.jpg"
+        },
+        {
+          img: "https://1.bp.blogspot.com/-Ya0EB-e2l-Q/W817jH4qhaI/AAAAAAABPeo/fGdnPdDzVSUr96b1i40-Tj_5DQbNMM_OgCLcBGAs/s1600/finished-home-elevation.jpg"
         }
       ];
 

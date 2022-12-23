@@ -14,7 +14,7 @@ import ComfreeABI from '../abi/ComfreeProtocol.json'
 
 const PropertyList = () => {
     //console.log(`Homes ${itemData[0].img}`)
-    const [comfreeaddress, setcomfreeaddress] = useState("0x874abada5C876f0a9467460C5DBeE1a09B575964")
+    const [comfreeaddress, setcomfreeaddress] = useState("0x02416fB9e00F5E5F47A3ca08C6127379c5beAA3B")
     const [currentAccount, setAccount] = useState();
     const [currentAccountBalance, setAccountBalance] = useState();
     const [datarowsloading,setdatarowsloading] = useState(false);
@@ -32,6 +32,7 @@ const PropertyList = () => {
     //use current selleraddress already defined
     const [offeramount, setOfferAmount] = useState();
     const [offeraccepted, setOfferAccepted] = useState(false);
+    const [numberofoffers, setNumberOfOffers] = useState();
   
 
   const loadWeb3 = async() => {
@@ -64,12 +65,33 @@ const PropertyList = () => {
     _comfreeInstance.methods.getArticlesForSale().call()
   }
 
+  const getNumberOfOffers = async() => {
+    var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    _comfreeInstance.methods.getOfferContractDetailsById().call()
+    .then(numOffers => {
+      setNumberOfOffers(numOffers)
+    })
+  }
+
+  const getListOfOffers = async() => {
+    var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    for(let i=0; i<=numberofoffers; i++) {
+      _comfreeInstance.methods._listOfOfferContracts(i).call()
+      .then( list => {
+          //console.log(`Offers ${JSON.stringify(list)}`)
+          console.log(`Offer: ${list.id}::${list.propertyid}::${list.sellerAddress}::${list.buyerAddress}::${list.offerAmount}::${list.accped}`)
+      })
+    }
+  }
+
   const addProperty = async() => {
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
     _comfreeInstance.methods.addPropertyForSale('0x0000000000000000000000000000000000000000', currentAccount, imgurl, propertyaddress, costineth).send({from: currentAccount})
     .then( results => {
-        console.log(JSON.stringify(results))
+        //console.log(JSON.stringify(results))
         setImgUrl("");
         setPropertyAddress("");
         setCostInEth("");
@@ -78,16 +100,14 @@ const PropertyList = () => {
   }
 
   const submitOffer = async() => {
-    console.log(`Offer Info ${selleraddress} ${currentAccount} ${offerpropertyid} ${offeramount} ${offeraccepted}`)
+    //console.log(`Offer Info ${selleraddress} ${currentAccount} ${offerpropertyid} ${offeramount} ${offeraccepted}`)
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
     _comfreeInstance.methods.createOfferContract(offerpropertyid, currentAccount, selleraddress,  offeramount, offeraccepted).send({from: currentAccount})
     .then(results => {
         console.log(JSON.stringify(results))
-        
     })
     .then(setShow(false))
-
   }
 
   useEffect(() => {
@@ -107,20 +127,22 @@ const PropertyList = () => {
           //get article by the id
           _comfreeInstance.methods._homesForSale(element).call()
           .then(house => {
-              console.log(`House ${house.toString()}`)
+              //console.log(`House ${house.toString()}`)
               setdatarowsloading(true);
-                console.log(`{id: ${house[0]}, imgurl: ${house[3]}`);
+                //console.log(`{id: ${house[0]}, imgurl: ${house[3]}`);
                 setdatarows(datarows => [...datarows, {id: house[0], seller: house[1], buyer:  house[2], imgurl: house[3], propertyaddress: house[4], ethprice: house[5]} ])
           })
         });
         setdatarowsloading(false); 
       })
+      getNumberOfOffers();
+      getListOfOffers();
   },[])
 
     return(
         <>
             <div>
-                Properties for Sale - Click Anywhere on the image to make an offer
+                Properties for Sale - <p className="fw-bold">Click Anywhere on the image to make an offer</p>
             </div>
             <div>
                 <ImageList rowHeight={160} cols={3}>
@@ -130,9 +152,9 @@ const PropertyList = () => {
                                 <img src={item.imgurl} 
                                     onClick={
                                         (e) => { 
-                                            console.log(`seller address ${item.seller}`)
+                                            //console.log(`seller address ${item.seller}`)
                                             if(item.seller === currentAccount) {
-                                                console.log(`buyser same as seller`)
+                                                //console.log(`buyser same as seller`)
                                                 window.alert(`You are the seller for this house`)
                                             }
                                             else {
@@ -192,7 +214,7 @@ const PropertyList = () => {
                     </div>
                 </Tab>
                 <Tab eventKey="CreateOffer" title="Manage Offer Purchase - Escrow">
-
+                     
                 </Tab>
             </Tabs>
             </div>
