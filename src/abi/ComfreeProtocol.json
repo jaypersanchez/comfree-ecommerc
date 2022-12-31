@@ -1,67 +1,5 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_value",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_propertyid",
-				"type": "uint256"
-			}
-		],
-		"name": "accept",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_buyerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_sellerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "imgurl",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "propertyaddress",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_ethprice",
-				"type": "uint256"
-			}
-		],
-		"name": "addPropertyForSale",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -112,78 +50,29 @@
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": false,
 				"internalType": "uint256",
-				"name": "_offerId",
-				"type": "uint256"
-			}
-		],
-		"name": "createConditionList",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_proertyid",
+				"name": "propertyid",
 				"type": "uint256"
 			},
 			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
 				"internalType": "address",
-				"name": "_buyerAddress",
+				"name": "buyer",
 				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_sellerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_offerAmount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_accepted",
-				"type": "bool"
 			}
 		],
-		"name": "createOfferContract",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_offerId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_wallsPainted",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "_CarpetCleaned",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "_WindowsWashed",
-				"type": "bool"
-			}
-		],
-		"name": "manageConditions",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "OfferAccepted",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -349,6 +238,114 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_value",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_propertyid",
+				"type": "uint256"
+			}
+		],
+		"name": "accept",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_sellerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "imgurl",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "propertyaddress",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_ethprice",
+				"type": "uint256"
+			}
+		],
+		"name": "addPropertyForSale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_offerId",
+				"type": "uint256"
+			}
+		],
+		"name": "createConditionList",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_proertyid",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_sellerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_offerAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_accepted",
+				"type": "bool"
+			}
+		],
+		"name": "createOfferContract",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getHomesForSale",
 		"outputs": [
@@ -372,6 +369,34 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_offerId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_wallsPainted",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_CarpetCleaned",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_WindowsWashed",
+				"type": "bool"
+			}
+		],
+		"name": "manageConditions",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

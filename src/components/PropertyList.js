@@ -14,7 +14,7 @@ import ComfreeABI from '../abi/ComfreeProtocol.json'
 
 const PropertyList = () => {
     //console.log(`Homes ${itemData[0].img}`)
-    const [comfreeaddress, setcomfreeaddress] = useState("0x02416fB9e00F5E5F47A3ca08C6127379c5beAA3B")
+    const [comfreeaddress, setcomfreeaddress] = useState("0x12186820932B9a212276E2d2464973b6D1a4A063")
     const [currentAccount, setAccount] = useState();
     const [currentAccountBalance, setAccountBalance] = useState();
     const [datarowsloading,setdatarowsloading] = useState(false);
@@ -33,6 +33,8 @@ const PropertyList = () => {
     const [offeramount, setOfferAmount] = useState();
     const [offeraccepted, setOfferAccepted] = useState(false);
     const [numberofoffers, setNumberOfOffers] = useState();
+    const [offersdatarows, setoffersdatarows] = useState([]);
+    const [offersdatarowsloading,setoffersdatarowsloading] = useState(false);
   
 
   const loadWeb3 = async() => {
@@ -74,17 +76,7 @@ const PropertyList = () => {
     })
   }
 
-  const getListOfOffers = async() => {
-    var web3 = new Web3(Web3.givenProvider);
-    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
-    for(let i=0; i<=numberofoffers; i++) {
-      _comfreeInstance.methods._listOfOfferContracts(i).call()
-      .then( list => {
-          //console.log(`Offers ${JSON.stringify(list)}`)
-          console.log(`Offer: ${list.id}::${list.propertyid}::${list.sellerAddress}::${list.buyerAddress}::${list.offerAmount}::${list.accped}`)
-      })
-    }
-  }
+ 
 
   const addProperty = async() => {
     var web3 = new Web3(Web3.givenProvider);
@@ -119,6 +111,24 @@ const PropertyList = () => {
 
   useMemo(() => {
     var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    
+      _comfreeInstance.methods.getOfferContractDetailsById().call()
+      .then( properties => {
+        properties.forEach(element => {
+          _comfreeInstance.methods._listOfOfferContracts(element).call()
+          .then(house => {
+            setoffersdatarowsloading(true);
+            console.log(`Offer: ${house.id}::${house.propertyid}::${house.sellerAddress}::${house.buyerAddress}::${house.offerAmount}::${house.accepted}`)
+            setoffersdatarows(offersdatarows => [...offersdatarows,{id: house.propertyid, propertyid: house.propertyid, seller:house.sellerAddress, buyer: house.buyerAddress, offer: house.offerAmount, accepted: house.accepted}]);
+          })
+          setoffersdatarowsloading(false);
+        })
+      })
+  },[])
+
+  useMemo(() => {
+    var web3 = new Web3(Web3.givenProvider);
     let counter = 0
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
     _comfreeInstance.methods.getHomesForSale().call()
@@ -136,7 +146,7 @@ const PropertyList = () => {
         setdatarowsloading(false); 
       })
       getNumberOfOffers();
-      getListOfOffers();
+      
   },[])
 
     return(
@@ -213,8 +223,44 @@ const PropertyList = () => {
                     <Button variant="secondary" onClick={(e) => addProperty(e)}>List Property</Button>
                     </div>
                 </Tab>
-                <Tab eventKey="CreateOffer" title="Manage Offer Purchase - Escrow">
-                     
+                <Tab eventKey="CreateOffer" title="Homes with Offers">
+                     <div>
+                        <ImageList rowHeight={160} cols={3}>
+                            {
+                                offersdatarows.map((item) => (
+                                    <ImageListItem key={item.id}>
+                                        <img src={item.imgurl} 
+                                            onClick={
+                                                (e) => { 
+                                                    //console.log(`seller address ${item.seller}`)
+                                                    if(item.seller === currentAccount) {
+                                                        //console.log(`buyser same as seller`)
+                                                        window.alert(`You are the seller for this house`)
+                                                    }
+                                                    else {
+                                                        setOfferPropertyId(item.id);
+                                                        setSellerAddress(item.seller)
+                                                        setShow(true);
+                                                    }
+                                                }
+                                            } />
+                                        <ImageListItemBar
+                                            title={item.propertyaddress}
+                                            subtitle={`Price in ETH ${item.ethprice}`}
+                                            actionIcon={
+                                                <IconButton
+                                                  sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                                  aria-label={`info about ${item.seller}`}
+                                                >
+                                                  <InfoIcon onClick={() => {navigator.clipboard.writeText(item.seller)}}/>
+                                                </IconButton>
+                                              }
+                                        />
+                                    </ImageListItem>
+                                ))
+                            }
+                        </ImageList>
+                     </div>
                 </Tab>
             </Tabs>
             </div>
