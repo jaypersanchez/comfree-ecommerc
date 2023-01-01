@@ -14,7 +14,7 @@ import ComfreeABI from '../abi/ComfreeProtocol.json'
 
 const PropertyList = () => {
     //console.log(`Homes ${itemData[0].img}`)
-    const [comfreeaddress, setcomfreeaddress] = useState("0x12186820932B9a212276E2d2464973b6D1a4A063")
+    const [comfreeaddress, setcomfreeaddress] = useState("0x1B721b581c86eE0a48dE575028Bc062f95e0ec60")
     const [currentAccount, setAccount] = useState();
     const [currentAccountBalance, setAccountBalance] = useState();
     const [datarowsloading,setdatarowsloading] = useState(false);
@@ -76,8 +76,6 @@ const PropertyList = () => {
     })
   }
 
- 
-
   const addProperty = async() => {
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
@@ -95,7 +93,8 @@ const PropertyList = () => {
     //console.log(`Offer Info ${selleraddress} ${currentAccount} ${offerpropertyid} ${offeramount} ${offeraccepted}`)
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
-    _comfreeInstance.methods.createOfferContract(offerpropertyid, currentAccount, selleraddress,  offeramount, offeraccepted).send({from: currentAccount})
+    console.log(`making offer ${offerpropertyid}::${selleraddress}::${imgurl}`)
+    _comfreeInstance.methods.createOfferContract(offerpropertyid, currentAccount, selleraddress, imgurl, offeramount, offeraccepted).send({from: currentAccount})
     .then(results => {
         console.log(JSON.stringify(results))
     })
@@ -109,6 +108,7 @@ const PropertyList = () => {
     loadWalletData();
   })
 
+  //list of offers
   useMemo(() => {
     var web3 = new Web3(Web3.givenProvider);
     var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
@@ -117,16 +117,17 @@ const PropertyList = () => {
       .then( properties => {
         properties.forEach(element => {
           _comfreeInstance.methods._listOfOfferContracts(element).call()
-          .then(house => {
+          .then((house, element) => {
             setoffersdatarowsloading(true);
-            console.log(`Offer: ${house.id}::${house.propertyid}::${house.sellerAddress}::${house.buyerAddress}::${house.offerAmount}::${house.accepted}`)
-            setoffersdatarows(offersdatarows => [...offersdatarows,{id: house.propertyid, propertyid: house.propertyid, seller:house.sellerAddress, buyer: house.buyerAddress, offer: house.offerAmount, accepted: house.accepted}]);
+            console.log(`Offer: ${house[0]}::${house[1]}::${house[2]}::${house[3]}::${house[4]}::${house[5]}::${house[6]}`)
+            setoffersdatarows(offersdatarows => [...offersdatarows,{id: house[0], propertyid: house[1], seller:house[2], buyer: house[3], imgurl: house[4], offer: house[5], accepted: house[6]}]);
           })
           setoffersdatarowsloading(false);
         })
       })
   },[])
 
+  //list of properties for sale
   useMemo(() => {
     var web3 = new Web3(Web3.givenProvider);
     let counter = 0
@@ -170,6 +171,8 @@ const PropertyList = () => {
                                             else {
                                                 setOfferPropertyId(item.id);
                                                 setSellerAddress(item.seller)
+                                                setImgUrl(item.imgurl)
+                                                console.log(`Making offer ${item.id}::${item.seller}::${item.imgurl}`)
                                                 setShow(true);
                                             }
                                         }

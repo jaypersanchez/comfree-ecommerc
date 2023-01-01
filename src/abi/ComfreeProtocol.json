@@ -219,6 +219,11 @@
 				"type": "address"
 			},
 			{
+				"internalType": "string",
+				"name": "imgurl",
+				"type": "string"
+			},
+			{
 				"internalType": "uint256",
 				"name": "offerAmount",
 				"type": "uint256"
@@ -328,6 +333,11 @@
 				"internalType": "address",
 				"name": "_sellerAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_imgurl",
+				"type": "string"
 			},
 			{
 				"internalType": "uint256",
