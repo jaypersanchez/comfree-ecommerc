@@ -14,7 +14,7 @@ import ComfreeABI from '../abi/ComfreeProtocol.json'
 
 const PropertyList = () => {
     //console.log(`Homes ${itemData[0].img}`)
-    const [comfreeaddress, setcomfreeaddress] = useState("0x1B721b581c86eE0a48dE575028Bc062f95e0ec60")
+    const [comfreeaddress, setcomfreeaddress] = useState("0xc34a719fA5cB21dC282509E7ADC1cA39b06dF433")
     const [currentAccount, setAccount] = useState();
     const [currentAccountBalance, setAccountBalance] = useState();
     const [datarowsloading,setdatarowsloading] = useState(false);
@@ -27,6 +27,7 @@ const PropertyList = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     /** Offer Properties */
+    const [offerid, setofferid] = useState();
     const [offerpropertyid, setOfferPropertyId] = useState();
     //buyer address is in currentAccount
     //use current selleraddress already defined
@@ -101,6 +102,24 @@ const PropertyList = () => {
     .then(setShow(false))
   }
 
+  const acceptOffer = async(id, accepted, propertyid, acceptedamount) => {
+    console.log(`accepting offer ${id}::${propertyid}::${accepted}`)
+    var web3 = new Web3(Web3.givenProvider);
+    var _comfreeInstance = new web3.eth.Contract(ComfreeABI, comfreeaddress)
+    //@id = offer id
+    _comfreeInstance.methods.accept(id, accepted, propertyid)
+    .send({
+      from: currentAccount,
+      value: web3.utils.toWei(acceptedamount),
+      gas: "2100000"
+    })
+    .then(result => {
+      console.log(JSON.stringify(result))
+    })
+
+
+  }
+
   useEffect(() => {
     //setup to connect to Metamask wallet or other wallet provider
     loadWeb3();
@@ -122,10 +141,10 @@ const PropertyList = () => {
             //only list property that is being sold and received an offer that is the currentAccount
             /*console.log(`Offer: ${house[0]}::${house[1]}::${house[2]}::${house[3]}::${house[4]}::${house[5]}::${house[6]}`)*/
             console.log(`offer ${currentAccount}===${house[3]}`)
-            if(currentAccount === house[3]) {
+            //if(currentAccount === house[3]) {
               
               setoffersdatarows(offersdatarows => [...offersdatarows,{id: house[0], propertyid: house[1], buyer:house[2], seller: house[3], imgurl: house[4], offer: house[5], accepted: house[6]}]);
-            }
+            //}
           })
           setoffersdatarowsloading(false);
         })
@@ -177,7 +196,7 @@ const PropertyList = () => {
                                                 setOfferPropertyId(item.id);
                                                 setSellerAddress(item.seller)
                                                 setImgUrl(item.imgurl)
-                                                console.log(`Making offer ${item.id}::${item.seller}::${item.imgurl}`)
+                                                //console.log(`Making offer ${item.id}::${item.seller}::${item.imgurl}`)
                                                 setShow(true);
                                             }
                                         }
@@ -232,6 +251,7 @@ const PropertyList = () => {
                     </div>
                 </Tab>
                 <Tab eventKey="CreateOffer" title="Homes with Offers">
+                     <div><p>Click the property image to accept the offer</p></div>
                      <div>
                         <ImageList rowHeight={160} cols={3}>
                             {
@@ -241,14 +261,17 @@ const PropertyList = () => {
                                             onClick={
                                                 (e) => { 
                                                     
-                                                        setOfferPropertyId(item.id);
-                                                        setSellerAddress(item.seller)
-                                                        setShow(true);
+                                                        //setofferid(item.id);
+                                                        //setOfferPropertyId(item.propertyid);
+                                                        //setSellerAddress(item.seller)
+                                                        //setOfferAmount(item.offer)
+                                                        console.log(`ACCEPT OFFER::${item.id}::${item.propertyid}`)
+                                                        acceptOffer(item.id, true, item.propertyid, item.offer);
                                                     
                                                 }
                                             } />
                                         <ImageListItemBar
-                                            title={item.propertyaddress}
+                                            title={`Offer ID ${item.id}`}
                                             subtitle={`Amount Offered ${item.offer}`}
                                             actionIcon={
                                                 <IconButton
