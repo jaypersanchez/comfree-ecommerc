@@ -119,8 +119,13 @@ const PropertyList = () => {
           _comfreeInstance.methods._listOfOfferContracts(element).call()
           .then((house, element) => {
             setoffersdatarowsloading(true);
-            console.log(`Offer: ${house[0]}::${house[1]}::${house[2]}::${house[3]}::${house[4]}::${house[5]}::${house[6]}`)
-            setoffersdatarows(offersdatarows => [...offersdatarows,{id: house[0], propertyid: house[1], seller:house[2], buyer: house[3], imgurl: house[4], offer: house[5], accepted: house[6]}]);
+            //only list property that is being sold and received an offer that is the currentAccount
+            /*console.log(`Offer: ${house[0]}::${house[1]}::${house[2]}::${house[3]}::${house[4]}::${house[5]}::${house[6]}`)*/
+            console.log(`offer ${currentAccount}===${house[3]}`)
+            if(currentAccount === house[3]) {
+              
+              setoffersdatarows(offersdatarows => [...offersdatarows,{id: house[0], propertyid: house[1], buyer:house[2], seller: house[3], imgurl: house[4], offer: house[5], accepted: house[6]}]);
+            }
           })
           setoffersdatarowsloading(false);
         })
@@ -140,7 +145,7 @@ const PropertyList = () => {
           .then(house => {
               //console.log(`House ${house.toString()}`)
               setdatarowsloading(true);
-                //console.log(`{id: ${house[0]}, imgurl: ${house[3]}`);
+                console.log(`{id: ${house[0]}, imgurl: ${house[3]}`);
                 setdatarows(datarows => [...datarows, {id: house[0], seller: house[1], buyer:  house[2], imgurl: house[3], propertyaddress: house[4], ethprice: house[5]} ])
           })
         });
@@ -235,21 +240,16 @@ const PropertyList = () => {
                                         <img src={item.imgurl} 
                                             onClick={
                                                 (e) => { 
-                                                    //console.log(`seller address ${item.seller}`)
-                                                    if(item.seller === currentAccount) {
-                                                        //console.log(`buyser same as seller`)
-                                                        window.alert(`You are the seller for this house`)
-                                                    }
-                                                    else {
+                                                    
                                                         setOfferPropertyId(item.id);
                                                         setSellerAddress(item.seller)
                                                         setShow(true);
-                                                    }
+                                                    
                                                 }
                                             } />
                                         <ImageListItemBar
                                             title={item.propertyaddress}
-                                            subtitle={`Price in ETH ${item.ethprice}`}
+                                            subtitle={`Amount Offered ${item.offer}`}
                                             actionIcon={
                                                 <IconButton
                                                   sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
