@@ -265,14 +265,20 @@ const PropertyList = () => {
                                                         //setOfferPropertyId(item.propertyid);
                                                         //setSellerAddress(item.seller)
                                                         //setOfferAmount(item.offer)
-                                                        console.log(`ACCEPT OFFER::${item.id}::${item.propertyid}`)
-                                                        acceptOffer(item.id, true, item.propertyid, item.offer);
-                                                    
+                                                        console.log(`ACCEPT OFFER::${item.id}::${item.propertyid}::${item.accepted}`)
+                                                        if(item.accepted === false) {
+                                                          acceptOffer(item.id, true, item.propertyid, item.offer);
+                                                        }
+                                                        else {
+                                                          window.alert(`Offer has been accepted and is off the market`)
+                                                        }
                                                 }
                                             } />
                                         <ImageListItemBar
                                             title={`Offer ID ${item.id}`}
-                                            subtitle={`Amount Offered ${item.offer}`}
+                                            subtitle={
+                                              `Amount Offered ${item.offer}`
+                                            }
                                             actionIcon={
                                                 <IconButton
                                                   sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
